@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 	"pesthub/adapters/database"
-	"pesthub/features/pests"
+	"pesthub/features/pest"
 )
 
 func main() {
-	depsCreate := pests.CreateDeps{
+	depsCreate := pest.CreateDeps{
 		InsertCommand: database.Insert,
 	}
 
-	id, err := pests.Create(depsCreate, &pests.CreateInput{CommonName: "OurName"})
+	id, err := pest.Create(depsCreate, &pest.CreateInput{CommonName: "OurName"})
 	if err != nil {
 		panic(err)
 	}

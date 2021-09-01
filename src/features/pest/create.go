@@ -1,4 +1,4 @@
-package pests
+package pest
 
 import (
 	"errors"
