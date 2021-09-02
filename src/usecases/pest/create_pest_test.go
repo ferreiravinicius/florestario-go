@@ -3,7 +3,7 @@ package pest_test
 import (
 	"errors"
 	"pesthub/entities"
-	"pesthub/features/pest"
+	"pesthub/usecases/pest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
