@@ -22,7 +22,7 @@ func init() {
 	}
 }
 
-var InsertPest contracts.InsertPest = func(pest *entities.Pest) (int64, error) {
+var SavePest contracts.SavePest = func(pest *entities.Pest) (int64, error) {
 	ctx := context.Background()
 	query := "INSERT INTO praga (name_common) VALUES ($1) RETURNING id"
 	row := db.QueryRow(

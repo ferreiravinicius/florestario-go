@@ -6,40 +6,58 @@ import (
 	"pesthub/entities"
 )
 
+var (
+	ErrDuplicated = errors.New("this record already exists")
+	ErrValidation = errors.New("invalid input")
+)
+
 type CreatePestInput struct {
 	CommonName string
 }
 
 type CreatePest struct {
-	insert contracts.InsertPest
+	save      contracts.SavePest
+	getByName contracts.GetPestByName
 }
 
-func NewCreatePest(implInsert contracts.InsertPest) *CreatePest {
-	return &CreatePest{insert: implInsert}
+func NewCreatePest(implSave contracts.SavePest, implGetByName contracts.GetPestByName) *CreatePest {
+	return &CreatePest{save: implSave, getByName: implGetByName}
 }
 
-func (o *CreatePest) Execute(pestInput *CreatePestInput) (int64, error) {
-	if err := validate(pestInput); err != nil {
+func (uc *CreatePest) Execute(userInput *CreatePestInput) (int64, error) {
+	if err := uc.validateUserInput(userInput); err != nil {
 		return 0, err
 	}
-	pest := convert(pestInput)
-	id, err := o.insert(pest)
+
+	if err := uc.validateNameAlreadyExists(userInput.CommonName); err != nil {
+		return 0, err
+	}
+
+	pest := convertToEntity(userInput)
+	id, err := uc.save(pest)
 	if err != nil {
 		return 0, err
 	}
 	return id, nil
 }
 
-var ErrValidation = errors.New("invalid input")
+func (uc *CreatePest) validateNameAlreadyExists(name string) error {
+	if pest, err := uc.getByName(name); err != nil {
+		return err
+	} else if pest != nil {
+		return ErrDuplicated
+	}
+	return nil
+}
 
-func validate(data *CreatePestInput) error {
+func (*CreatePest) validateUserInput(data *CreatePestInput) error {
 	if len(data.CommonName) < 3 {
 		return ErrValidation
 	}
 	return nil
 }
 
-func convert(input *CreatePestInput) *entities.Pest {
+func convertToEntity(input *CreatePestInput) *entities.Pest {
 	return &entities.Pest{
 		CommonName: input.CommonName,
 	}

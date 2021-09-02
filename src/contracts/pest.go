@@ -2,4 +2,5 @@ package contracts
 
 import "pesthub/entities"
 
-type InsertPest func(pest *entities.Pest) (int64, error)
+type SavePest func(pest *entities.Pest) (int64, error)
+type GetPestByName func(name string) (*entities.Pest, error)
