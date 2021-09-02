@@ -2,30 +2,28 @@ package pest
 
 import (
 	"errors"
+	"pesthub/contracts"
 	"pesthub/entities"
 )
 
-type InsertCommand func(pest *entities.Pest) (int64, error)
-
-type CreateDeps struct {
-	InsertCommand
-}
-type CreateInput struct {
+type CreatePestInput struct {
 	CommonName string
 }
 
-func (i *CreateInput) ToEntity() *entities.Pest {
-	return &entities.Pest{
-		CommonName: i.CommonName,
-	}
+type CreatePest struct {
+	insert contracts.InsertPest
 }
 
-func Create(deps CreateDeps, data *CreateInput) (int64, error) {
-	if err := validate(data); err != nil {
+func NewCreatePest(implInsert contracts.InsertPest) *CreatePest {
+	return &CreatePest{insert: implInsert}
+}
+
+func (o *CreatePest) Execute(pestInput *CreatePestInput) (int64, error) {
+	if err := validate(pestInput); err != nil {
 		return 0, err
 	}
-	pest := data.ToEntity()
-	id, err := deps.InsertCommand(pest)
+	pest := convert(pestInput)
+	id, err := o.insert(pest)
 	if err != nil {
 		return 0, err
 	}
@@ -34,9 +32,15 @@ func Create(deps CreateDeps, data *CreateInput) (int64, error) {
 
 var ErrValidation = errors.New("invalid input")
 
-func validate(data *CreateInput) error {
+func validate(data *CreatePestInput) error {
 	if len(data.CommonName) < 3 {
 		return ErrValidation
 	}
 	return nil
+}
+
+func convert(input *CreatePestInput) *entities.Pest {
+	return &entities.Pest{
+		CommonName: input.CommonName,
+	}
 }

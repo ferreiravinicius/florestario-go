@@ -1,6 +1,10 @@
 package digitalaccount
 
-import "pesthub/contracts"
+import (
+	"fmt"
+	"pesthub/contracts"
+	"pesthub/entities"
+)
 
 type CreateOfferInput struct {
 	Name          string
@@ -26,6 +30,23 @@ func NewCreateOffer(implInsert contracts.InsertOffer, implOutput CreateOfferOutp
 }
 
 func (o *CreateOffer) Execute(offerInput *CreateOfferInput) {
+	if err := validate(offerInput); err != nil {
+		o.output.OnInvalid(err.Error())
+	}
+	offer := convert(offerInput)
 	o.insert("data here")
+	fmt.Println(offer)
 	o.output.OnSuccess("everything is good")
+}
+
+func validate(offerInput *CreateOfferInput) error {
+	return nil
+}
+
+func convert(offerInput *CreateOfferInput) *entities.Damage {
+	return &entities.Damage{
+		//
+		//
+		//
+	}
 }

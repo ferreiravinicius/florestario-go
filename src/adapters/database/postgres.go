@@ -3,8 +3,8 @@ package database
 import (
 	"context"
 	"fmt"
+	"pesthub/contracts"
 	"pesthub/entities"
-	"pesthub/features/pest"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -22,7 +22,7 @@ func init() {
 	}
 }
 
-var Insert pest.InsertCommand = func(pest *entities.Pest) (int64, error) {
+var Insert contracts.InsertPest = func(pest *entities.Pest) (int64, error) {
 	ctx := context.Background()
 	query := "INSERT INTO praga (name_common) VALUES ($1) RETURNING id"
 	row := db.QueryRow(

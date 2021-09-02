@@ -1,12 +1,11 @@
 package main
 
-import (
-	"pesthub/features/contadigital/enviarlink"
-)
+import "pesthub/features/digitalaccount"
 
 func main() {
 
-	enviarlink.EnviarWhatsapp()
+	e := digitalaccount.NewCreateOffer(nil, nil)
+	e.Execute(nil)
 
 	// depsCreate := pest.CreateDeps{
 	// 	InsertCommand: database.Insert,
