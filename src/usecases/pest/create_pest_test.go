@@ -10,13 +10,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var mockInsertWithError = func(_ *entities.Pest) (int64, error) {
-	return 0, errors.New("fake error")
+func mockSave(rsId int64, rsErr error) contracts.SavePest {
+	return func(_ *entities.Pest) (int64, error) {
+		return rsId, rsErr
+	}
 }
 
-var mockInsert = func(_ *entities.Pest) (int64, error) {
-	return 999, nil
-}
+var (
+	mockSaveSuccess = mockSave(999, nil)
+	mockSaveErr     = mockSave(0, errors.New("random error"))
+)
 
 func mockGetByName(rsPest *entities.Pest, rsErr error) contracts.GetPestByName {
 	return func(_ string) (*entities.Pest, error) {
@@ -37,7 +40,7 @@ func TestCreate(t *testing.T) {
 
 	t.Run("it should return generated unique field", func(t *testing.T) {
 		input := getValidInput()
-		usecase := pest.NewCreatePest(mockInsert, mockGetByNameNoResult)
+		usecase := pest.NewCreatePest(mockSaveSuccess, mockGetByNameNoResult)
 		id, err := usecase.Execute(&input)
 		assert.NoError(t, err)
 		assert.Equal(t, int64(999), id)
@@ -45,21 +48,21 @@ func TestCreate(t *testing.T) {
 
 	t.Run("it should return error when invalid input is provided", func(t *testing.T) {
 		wrongInput := pest.CreatePestInput{Name: ""}
-		usecase := pest.NewCreatePest(mockInsert, mockGetByNameNoResult)
+		usecase := pest.NewCreatePest(mockSaveSuccess, mockGetByNameNoResult)
 		_, err := usecase.Execute(&wrongInput)
 		assert.Error(t, err)
 	})
 
 	t.Run("it should return error when insert fails for whatever reason", func(t *testing.T) {
 		input := getValidInput()
-		usecase := pest.NewCreatePest(mockInsertWithError, mockGetByNameNoResult)
+		usecase := pest.NewCreatePest(mockSaveErr, mockGetByNameNoResult)
 		_, err := usecase.Execute(&input)
 		assert.Error(t, err)
 	})
 
 	t.Run("it should return error when name already exists", func(t *testing.T) {
 		input := getValidInput()
-		usecase := pest.NewCreatePest(mockInsertWithError, mockGetByNameHavingResult)
+		usecase := pest.NewCreatePest(mockSaveErr, mockGetByNameHavingResult)
 		_, err := usecase.Execute(&input)
 		assert.Error(t, err)
 		assert.ErrorIs(t, err, pest.ErrDuplicated) // may change
