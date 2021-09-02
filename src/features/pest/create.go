@@ -10,7 +10,6 @@ type InsertCommand func(pest *entities.Pest) (int64, error)
 type CreateDeps struct {
 	InsertCommand
 }
-
 type CreateInput struct {
 	CommonName string
 }
