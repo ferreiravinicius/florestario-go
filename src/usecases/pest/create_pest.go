@@ -12,7 +12,7 @@ var (
 )
 
 type CreatePestInput struct {
-	CommonName string
+	Name string
 }
 
 type CreatePest struct {
@@ -29,7 +29,7 @@ func (uc *CreatePest) Execute(userInput *CreatePestInput) (int64, error) {
 		return 0, err
 	}
 
-	if err := uc.validateNameAlreadyExists(userInput.CommonName); err != nil {
+	if err := uc.validateNameAlreadyExists(userInput.Name); err != nil {
 		return 0, err
 	}
 
@@ -51,7 +51,7 @@ func (uc *CreatePest) validateNameAlreadyExists(name string) error {
 }
 
 func (*CreatePest) validateUserInput(data *CreatePestInput) error {
-	if len(data.CommonName) < 3 {
+	if len(data.Name) < 3 {
 		return ErrValidation
 	}
 	return nil
@@ -59,6 +59,6 @@ func (*CreatePest) validateUserInput(data *CreatePestInput) error {
 
 func convertToEntity(input *CreatePestInput) *entities.Pest {
 	return &entities.Pest{
-		CommonName: input.CommonName,
+		Name: input.Name,
 	}
 }

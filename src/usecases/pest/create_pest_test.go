@@ -32,7 +32,7 @@ var (
 func TestCreate(t *testing.T) {
 
 	var getValidInput = func() pest.CreatePestInput {
-		return pest.CreatePestInput{CommonName: "testing"}
+		return pest.CreatePestInput{Name: "testing"}
 	}
 
 	t.Run("it should return generated unique field", func(t *testing.T) {
@@ -44,7 +44,7 @@ func TestCreate(t *testing.T) {
 	})
 
 	t.Run("it should return error when invalid input is provided", func(t *testing.T) {
-		wrongInput := pest.CreatePestInput{CommonName: ""}
+		wrongInput := pest.CreatePestInput{Name: ""}
 		usecase := pest.NewCreatePest(mockInsert, mockGetByNameNoResult)
 		_, err := usecase.Execute(&wrongInput)
 		assert.Error(t, err)
@@ -56,5 +56,13 @@ func TestCreate(t *testing.T) {
 		_, err := usecase.Execute(&input)
 		assert.Error(t, err)
 	})
-	// TODO: rewrite tests for duplicated name validation
+
+	t.Run("it should return error when name already exists", func(t *testing.T) {
+		input := getValidInput()
+		usecase := pest.NewCreatePest(mockInsertWithError, mockGetByNameHavingResult)
+		_, err := usecase.Execute(&input)
+		assert.Error(t, err)
+		assert.ErrorIs(t, err, pest.ErrDuplicated) // may change
+	})
+
 }

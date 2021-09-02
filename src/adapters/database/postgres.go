@@ -28,7 +28,7 @@ var SavePest contracts.SavePest = func(pest *entities.Pest) (int64, error) {
 	row := db.QueryRow(
 		ctx,
 		query,
-		pest.CommonName,
+		pest.Name,
 	)
 
 	var id int64

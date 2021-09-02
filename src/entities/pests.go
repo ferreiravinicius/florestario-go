@@ -14,7 +14,7 @@ type Damage struct {
 
 type Pest struct {
 	// // Unique
-	CommonName string
+	Name string
 	// ScientificName string
 	// Kind           string //insect, fungae
 	// Description    string
