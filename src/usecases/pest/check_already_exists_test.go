@@ -18,8 +18,8 @@ func mockFindPestsHavingNames(resOk []*entities.Pest, resErr error) contracts.Fi
 func TestCheckAlreadyExists(t *testing.T) {
 
 	t.Run("it should return error when name already exists", func(t *testing.T) {
-		desiredResult := []*entities.Pest{&entities.Pest{}} // 1 result
-		mockFindAll := mockFindPestsHavingNames(desiredResult, nil)
+		wantedResult := make([]*entities.Pest, 1) // 1 result
+		mockFindAll := mockFindPestsHavingNames(wantedResult, nil)
 		fnCheckExists := pest.NewCheckAlreadyExists(mockFindAll)
 		input := &pest.CheckAlreadyExistsInput{}
 		err := fnCheckExists(input)
@@ -27,8 +27,8 @@ func TestCheckAlreadyExists(t *testing.T) {
 	})
 
 	t.Run("it should pass when no duplicated is found", func(t *testing.T) {
-		desiredResult := make([]*entities.Pest, 0) // empty result
-		mockFindAll := mockFindPestsHavingNames(desiredResult, nil)
+		wantedResult := make([]*entities.Pest, 0) // empty result
+		mockFindAll := mockFindPestsHavingNames(wantedResult, nil)
 		fnCheckExists := pest.NewCheckAlreadyExists(mockFindAll)
 		input := &pest.CheckAlreadyExistsInput{}
 		err := fnCheckExists(input)
