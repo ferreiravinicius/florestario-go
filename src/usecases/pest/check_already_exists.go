@@ -2,7 +2,7 @@ package pest
 
 import (
 	"errors"
-	"pesthub/entities"
+	"pesthub/contracts"
 )
 
 type CheckAlreadyExistsInput struct {
@@ -13,10 +13,10 @@ type CheckAlreadyExistsInput struct {
 type CheckAlreadyExists func(data *CheckAlreadyExistsInput) error
 
 func NewCheckAlreadyExists(
-	findAllHavingNames FindAllHavingNames,
+	findPestsHavingNames contracts.FindPestsHavingNames,
 ) CheckAlreadyExists {
 	return func(data *CheckAlreadyExistsInput) error {
-		pests, err := findAllHavingNames(data.CommonName)
+		pests, err := findPestsHavingNames(data.CommonName)
 		if err != nil {
 			return err
 		}
@@ -28,6 +28,3 @@ func NewCheckAlreadyExists(
 		return nil
 	}
 }
-
-type FindOneHavingName func(name string) (*entities.Pest, error)
-type FindAllHavingNames func(names ...string) ([]*entities.Pest, error)
