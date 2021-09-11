@@ -1,7 +1,7 @@
 package pest
 
 import (
-	"pesthub/contracts"
+	"pesthub/contracts/store"
 	"pesthub/entities"
 )
 
@@ -11,7 +11,7 @@ type CreatePestInput struct {
 type ICreatePest func(data *CreatePestInput) (int64, error)
 
 func NewCreatePest(
-	save contracts.SavePest,
+	save store.SavePest,
 	checkAlreadyExists CheckAlreadyExists,
 ) ICreatePest {
 	return func(data *CreatePestInput) (int64, error) {

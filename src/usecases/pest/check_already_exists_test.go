@@ -1,7 +1,7 @@
 package pest_test
 
 import (
-	"pesthub/contracts"
+	"pesthub/contracts/store"
 	"pesthub/entities"
 	"pesthub/usecases/pest"
 	"testing"
@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func mockFindPestsHavingNames(resOk []*entities.Pest, resErr error) contracts.FindPestsHavingNames {
+func mockFindPestsHavingNames(resOk []*entities.Pest, resErr error) store.FindPestsHavingNames {
 	return func(names ...string) ([]*entities.Pest, error) {
 		return resOk, resErr
 	}

@@ -2,7 +2,7 @@ package pest_test
 
 import (
 	"errors"
-	"pesthub/contracts"
+	"pesthub/contracts/store"
 	"pesthub/entities"
 	"testing"
 )
@@ -17,7 +17,7 @@ import (
 // 	"github.com/stretchr/testify/assert"
 // )
 
-func mockSave(rsId int64, rsErr error) contracts.SavePest {
+func mockSave(rsId int64, rsErr error) store.SavePest {
 	return func(_ *entities.Pest) (int64, error) {
 		return rsId, rsErr
 	}
