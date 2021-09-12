@@ -1,6 +1,7 @@
 package pest_test
 
 import (
+	"errors"
 	"pesthub/contracts/store"
 	"pesthub/entities"
 	"pesthub/usecases/pest"
@@ -47,26 +48,14 @@ func TestCreate(t *testing.T) {
 		_, err := create(&input)
 		assert.Error(t, err)
 	})
-	// 	t.Run("it should return error when invalid input is provided", func(t *testing.T) {
-	// 		wrongInput := pest.CreatePestInput{Name: ""}
-	// 		usecase := pest.NewCreatePest(mockSaveSuccess, mockGetByNameNoResult)
-	// 		_, err := usecase.Execute(&wrongInput)
-	// 		assert.Error(t, err)
-	// 	})
 
-	// 	t.Run("it should return error when insert fails for whatever reason", func(t *testing.T) {
-	// 		input := getValidInput()
-	// 		usecase := pest.NewCreatePest(mockSaveErr, mockGetByNameNoResult)
-	// 		_, err := usecase.Execute(&input)
-	// 		assert.Error(t, err)
-	// 	})
-
-	// 	t.Run("it should return error when name already exists", func(t *testing.T) {
-	// 		input := getValidInput()
-	// 		usecase := pest.NewCreatePest(mockSaveErr, mockGetByNameHavingResult)
-	// 		_, err := usecase.Execute(&input)
-	// 		assert.Error(t, err)
-	// 		assert.ErrorIs(t, err, pest.ErrDuplicated) // may change
-	// 	})
+	t.Run("it should return error when found duplicated pest", func(t *testing.T) {
+		input := getValidInput()
+		wanted := errors.New("fake error")
+		create := pest.NewCreatePest(mockSave(999, nil), mockCheckExists(wanted))
+		_, err := create(&input)
+		assert.Error(t, err)
+		assert.Equal(t, err.Error(), wanted.Error())
+	})
 
 }
