@@ -35,4 +35,8 @@ func TestCheckAlreadyExists(t *testing.T) {
 		assert.NoError(t, err)
 	})
 
+	t.Run("it should allow exclude", func(t *testing.T) {
+		// there's no id defined yet
+	})
+
 }
