@@ -15,7 +15,7 @@ type ICreatePest func(data *CreatePestInput) (int64, error)
 
 func NewCreatePest(
 	save store.SavePest,
-	checkAlreadyExists CheckAlreadyExists,
+	checkAlreadyExists ICheckAlreadyExists,
 ) ICreatePest {
 	return func(data *CreatePestInput) (int64, error) {
 		if err := validate(data); err != nil {

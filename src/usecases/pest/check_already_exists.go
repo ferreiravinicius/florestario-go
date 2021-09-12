@@ -10,11 +10,11 @@ type CheckAlreadyExistsInput struct {
 	CommonName     string
 }
 
-type CheckAlreadyExists func(data *CheckAlreadyExistsInput) error
+type ICheckAlreadyExists func(data *CheckAlreadyExistsInput) error
 
 func NewCheckAlreadyExists(
 	findPestsHavingNames store.FindPestsHavingNames,
-) CheckAlreadyExists {
+) ICheckAlreadyExists {
 	return func(data *CheckAlreadyExistsInput) error {
 		pests, err := findPestsHavingNames(data.CommonName)
 		if err != nil {

@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func mockCheckExists(result error) pest.CheckAlreadyExists {
+func mockCheckExists(result error) pest.ICheckAlreadyExists {
 	return func(data *pest.CheckAlreadyExistsInput) error {
 		return result
 	}
