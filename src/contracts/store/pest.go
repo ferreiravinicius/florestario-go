@@ -2,7 +2,7 @@ package store
 
 import "pesthub/entities"
 
-type SavePest func(pest *entities.Pest) (int64, error)
-type FindPestsHavingNames func(names ...string) ([]*entities.Pest, error)
+type SaveDisorder func(pest *entities.Disorder) (int64, error)
+type FindDisorderHavingNames func(names ...string) ([]*entities.Disorder, error)
 
 // type FindPestHavingName func(name string) (*entities.Pest, error)

@@ -12,15 +12,14 @@ type ControlMethod struct {
 type Damage struct {
 }
 
-type Pest struct {
+type Disorder struct {
 	// // Unique
 	Name         string
-	BinomialName string
+	BinomialName string //maybe list ?
 	Slug         string
-	// Kind           string //insect, fungae
+	Kind         string //desease, pest
+	Causer       string //insect, fungae
 	// Description    string
-	// PopularNames   []string
-	// // Duplicated NxN
 	// // Damages        []Damage ignore for now
 	// CommonCultures []Culture
 	// ControlMethods []ControlMethod

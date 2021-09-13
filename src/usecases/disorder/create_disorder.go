@@ -1,4 +1,4 @@
-package pest
+package disorder
 
 import (
 	"errors"
@@ -6,31 +6,32 @@ import (
 	"pesthub/entities"
 )
 
-type CreatePestInput struct {
+type CreateDisorderInput struct {
 	BionomialName string
 	Name          string
+	Description   string
+	Group         string //TODO: use entity ?
 }
 
-type ICreatePest func(data *CreatePestInput) (int64, error)
+type ICreateDisorder func(data *CreateDisorderInput) (int64, error)
 
-func NewCreatePest(
-	save store.SavePest,
+func NewCreateDisorder(
+	save store.SaveDisorder,
 	checkAlreadyExists ICheckAlreadyExists,
-) ICreatePest {
-	return func(data *CreatePestInput) (int64, error) {
+) ICreateDisorder {
+	return func(data *CreateDisorderInput) (int64, error) {
 		if err := validate(data); err != nil {
 			return 0, err
 		}
 
 		if err := checkAlreadyExists(&CheckAlreadyExistsInput{
-			ScientificName: "",
-			CommonName:     "",
+			Names: []string{data.BionomialName, data.Name},
 		}); err != nil {
 			return 0, err
 		}
 
-		pest := convert(data)
-		id, err := save(pest)
+		disorder := convert(data)
+		id, err := save(disorder)
 		if err != nil {
 			return 0, err
 		}
@@ -39,12 +40,12 @@ func NewCreatePest(
 	}
 }
 
-func convert(userInput *CreatePestInput) *entities.Pest {
-	return &entities.Pest{}
+func convert(userInput *CreateDisorderInput) *entities.Disorder {
+	return &entities.Disorder{}
 }
 
 // maybe change decouple this ?
-func validate(data *CreatePestInput) error {
+func validate(data *CreateDisorderInput) error {
 	if len(data.Name) == 0 {
 		return errors.New("name is required")
 	}
