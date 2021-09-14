@@ -2,6 +2,7 @@ package disorder
 
 import (
 	"errors"
+	"pesthub/contracts/message"
 	"pesthub/contracts/store"
 )
 
@@ -14,6 +15,7 @@ type ICheckAlreadyExists func(data *CheckAlreadyExistsInput) error
 
 func NewCheckAlreadyExists(
 	findDisorderHavingNames store.FindDisorderHavingNames,
+	getText message.GetText,
 ) ICheckAlreadyExists {
 	return func(data *CheckAlreadyExistsInput) error {
 		disorder, err := findDisorderHavingNames(data.Names...)
