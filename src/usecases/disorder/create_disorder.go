@@ -1,7 +1,7 @@
 package disorder
 
 import (
-	"errors"
+	"pesthub/commons/errors"
 	"pesthub/contracts/store"
 	"pesthub/entities"
 )
@@ -16,22 +16,26 @@ type CreateDisorderInput struct {
 type ICreateDisorder func(data *CreateDisorderInput) (int64, error)
 
 func NewCreateDisorder(
-	save store.SaveDisorder,
-	checkAlreadyExists ICheckAlreadyExists,
+	saveDisorder store.SaveDisorder,
+	existsDisorderByName store.ExistsDisorderByName,
 ) ICreateDisorder {
 	return func(data *CreateDisorderInput) (int64, error) {
 		if err := validate(data); err != nil {
 			return 0, err
 		}
 
-		if err := checkAlreadyExists(&CheckAlreadyExistsInput{Name: data.Name}); err != nil {
-			return 0, err
+		existsName, err := existsDisorderByName(data.Name)
+		if err != nil {
+			return 0, errors.Unexpected(err)
+		}
+		if existsName {
+			return 0, errors.Business("disorder.already.exists.name")
 		}
 
 		disorder := convert(data)
-		id, err := save(disorder)
+		id, err := saveDisorder(disorder)
 		if err != nil {
-			return 0, err
+			return 0, errors.Unexpected(err)
 		}
 
 		return id, nil
@@ -42,13 +46,10 @@ func convert(userInput *CreateDisorderInput) *entities.Disorder {
 	return &entities.Disorder{}
 }
 
-// maybe change decouple this ?
+// maybe decouple this ?
 func validate(data *CreateDisorderInput) error {
 	if len(data.Name) == 0 {
-		return errors.New("name is required")
-	}
-	if len(data.BionomialName) == 0 {
-		return errors.New("binomial name is required")
+		return errors.Business("field.required.name")
 	}
 	return nil
 }
