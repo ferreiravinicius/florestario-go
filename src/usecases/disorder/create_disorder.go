@@ -24,9 +24,7 @@ func NewCreateDisorder(
 			return 0, err
 		}
 
-		if err := checkAlreadyExists(&CheckAlreadyExistsInput{
-			Names: []string{data.BionomialName, data.Name},
-		}); err != nil {
+		if err := checkAlreadyExists(&CheckAlreadyExistsInput{Name: data.Name}); err != nil {
 			return 0, err
 		}
 

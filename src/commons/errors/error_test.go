@@ -1,6 +1,7 @@
 package errors_test
 
 import (
+	"fmt"
 	"pesthub/commons/errors"
 	"testing"
 
@@ -18,4 +19,11 @@ func TestBusinessError(t *testing.T) {
 	args := gotArgs.Args
 	assert.NotNil(t, args)
 	assert.Contains(t, args, "a")
+}
+
+func TestUnexpectedError(t *testing.T) {
+	fakeErr := fmt.Errorf("testing")
+	got := errors.Unexpected(fakeErr)
+	assert.NotNil(t, got.Cause)
+	assert.Contains(t, got.Error(), "testing")
 }

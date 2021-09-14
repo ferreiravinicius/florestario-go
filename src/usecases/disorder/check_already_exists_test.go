@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func mockFindDisordersHavingNames(resOk []*entities.Disorder, resErr error) store.FindDisorderHavingNames {
-	return func(names ...string) ([]*entities.Disorder, error) {
+func mockGetDisorderByName(resOk *entities.Disorder, resErr error) store.GetDisorderByName {
+	return func(_ string) (*entities.Disorder, error) {
 		return resOk, resErr
 	}
 }
@@ -18,20 +18,19 @@ func mockFindDisordersHavingNames(resOk []*entities.Disorder, resErr error) stor
 func TestCheckAlreadyExists(t *testing.T) {
 
 	t.Run("it should return error when name already exists", func(t *testing.T) {
-		wantedResult := make([]*entities.Disorder, 1) // 1 result
-		mockFindAll := mockFindDisordersHavingNames(wantedResult, nil)
-		fnCheckExists := disorder.NewCheckAlreadyExists(mockFindAll)
+		wantedResult := &entities.Disorder{}
+		mockGetDisorder := mockGetDisorderByName(wantedResult, nil)
+		check := disorder.NewCheckAlreadyExists(mockGetDisorder)
 		input := &disorder.CheckAlreadyExistsInput{}
-		err := fnCheckExists(input)
+		err := check(input)
 		assert.Error(t, err)
 	})
 
-	t.Run("it should pass when no duplicated is found", func(t *testing.T) {
-		wantedResult := make([]*entities.Disorder, 0) // empty result
-		mockFindAll := mockFindDisordersHavingNames(wantedResult, nil)
-		fnCheckExists := disorder.NewCheckAlreadyExists(mockFindAll)
+	t.Run("it should pass when no duplicated name is found", func(t *testing.T) {
+		mockGetDisorder := mockGetDisorderByName(nil, nil)
+		check := disorder.NewCheckAlreadyExists(mockGetDisorder)
 		input := &disorder.CheckAlreadyExistsInput{}
-		err := fnCheckExists(input)
+		err := check(input)
 		assert.NoError(t, err)
 	})
 

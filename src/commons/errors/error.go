@@ -1,5 +1,7 @@
 package errors
 
+import "fmt"
+
 // Method 1: custom error with args and code
 // Deal with translation on controller
 // Pros: No need for usecase to depend on message.GetText
@@ -22,6 +24,11 @@ func Business(code string, args ...map[string]string) BusinessError {
 
 type UnexpectedError struct {
 	Cause error
+}
+
+func (u UnexpectedError) Error() string {
+	msg := fmt.Sprintf("Unexpected error: %v", u.Cause.Error())
+	return msg
 }
 
 func Unexpected(cause error) UnexpectedError {

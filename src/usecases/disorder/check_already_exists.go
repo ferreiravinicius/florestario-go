@@ -1,32 +1,28 @@
 package disorder
 
 import (
-	"errors"
-	"pesthub/contracts/message"
+	"pesthub/commons/errors"
 	"pesthub/contracts/store"
 )
 
 type CheckAlreadyExistsInput struct {
-	Names   []string
-	Exclude string //todo: exclude id
+	Name    string
+	Exclude string //TODO: exclude id
 }
 
 type ICheckAlreadyExists func(data *CheckAlreadyExistsInput) error
 
 func NewCheckAlreadyExists(
-	findDisorderHavingNames store.FindDisorderHavingNames,
-	getText message.GetText,
+	getDisorderByName store.GetDisorderByName,
 ) ICheckAlreadyExists {
 	return func(data *CheckAlreadyExistsInput) error {
-		disorder, err := findDisorderHavingNames(data.Names...)
+		disorder, err := getDisorderByName(data.Name)
 		if err != nil {
-			return err
+			return errors.Unexpected(err)
 		}
-
-		if len(disorder) > 0 {
-			return errors.New("disorder already exists")
+		if disorder != nil {
+			return errors.Business("disorder.exists.name")
 		}
-
 		return nil
 	}
 }
