@@ -10,6 +10,7 @@ import (
 func TestNormalize(t *testing.T) {
 	assert.Equal(t, "iaac", text.Normalize("íãáç"))
 	assert.Equal(t, "abc", text.Normalize("a@b?c!#"))
+	assert.Equal(t, "macA", text.Normalize("máçÃ"))
 	assert.Equal(t, "", text.Normalize(""))
 }
 

@@ -7,10 +7,7 @@ import (
 )
 
 type CreateDisorderInput struct {
-	BionomialName string
-	Name          string
-	Description   string
-	Group         string //TODO: use entity ?
+	Name string
 }
 
 type ICreateDisorder func(data *CreateDisorderInput) (int64, error)
