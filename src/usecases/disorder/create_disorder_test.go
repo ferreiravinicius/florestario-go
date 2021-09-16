@@ -26,8 +26,7 @@ func TestCreate(t *testing.T) {
 
 	var getValidInput = func() *disorder.CreateDisorderInput {
 		return &disorder.CreateDisorderInput{
-			Name:          "name",
-			BionomialName: "binomial name",
+			Name: "name",
 		}
 	}
 
