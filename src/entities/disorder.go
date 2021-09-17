@@ -2,21 +2,23 @@ package entities
 
 import "pesthub/commons/text"
 
-type Culture struct {
-}
+// type Culture struct {
+// }
 
-type Symptom struct {
-}
+// type Symptom struct {
+// }
 
-type ControlMethod struct {
-}
+// type ControlMethod struct {
+// }
 
-type Damage struct {
-}
+// type Damage struct {
+// }
 
 type Disorder struct {
 	// // Unique
+	Code uint64
 	Name string
+
 	// BinomialName string //maybe list ?
 	Slug   string
 	Kind   string //desease, pest

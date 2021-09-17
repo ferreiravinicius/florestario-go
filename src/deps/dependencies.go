@@ -1,5 +1,4 @@
-//TODO: rename files and separate them like disorder.go, message.go and etc
-package scope
+package deps
 
 import (
 	"pesthub/contracts"
