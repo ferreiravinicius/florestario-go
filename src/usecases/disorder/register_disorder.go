@@ -1,9 +1,10 @@
 package disorder
 
 import (
-	"errors"
-	"pesthub/deps"
 	"pesthub/entities"
+	"pesthub/env"
+	"pesthub/failure"
+	"strconv"
 )
 
 const (
@@ -14,28 +15,31 @@ type RegisterDisorderInput struct {
 	Name string
 }
 
-//TODO: change output to PresentableDisorder
-func RegisterDisorder(data *RegisterDisorderInput) (*entities.Disorder, error) {
-	exists, err := deps.DisorderStore.ExistsName(data.Name)
-	if err != nil {
-		return nil, err
-	}
-	if exists {
-		message := deps.Messages.GetText(MsgNameAlreadyExists)
-		return nil, errors.New(message)
-	}
-
-	disorder := makeDisorder(data)
-	disorder, err = deps.DisorderStore.Save(disorder)
-	if err != nil {
-		return nil, err
-	}
-
-	return disorder, nil
+type RegisterDisorderOutput struct {
+	Code string
 }
 
-func makeDisorder(data *RegisterDisorderInput) *entities.Disorder {
-	return &entities.Disorder{
-		Name: data.Name,
+func RegisterDisorder(data *RegisterDisorderInput) (*RegisterDisorderOutput, error) {
+	exists, err := env.DisorderStore.ExistsName(data.Name)
+	if err != nil {
+		return nil, failure.Internal(err)
 	}
+	if exists {
+		message := env.Messages.GetText(MsgNameAlreadyExists)
+		return nil, failure.UseCase(message)
+	}
+
+	disorder := data.ToEntity()
+	disorder, err = env.DisorderStore.Save(disorder)
+	if err != nil {
+		return nil, failure.Internal(err)
+	}
+
+	return &RegisterDisorderOutput{
+		Code: strconv.FormatUint(disorder.Code, 10),
+	}, nil
+}
+
+func (in *RegisterDisorderInput) ToEntity() *entities.Disorder {
+	return &entities.Disorder{Name: in.Name}
 }

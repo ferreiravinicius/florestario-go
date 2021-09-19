@@ -1,4 +1,4 @@
-package deps
+package env
 
 import (
 	"pesthub/contracts"
