@@ -1,6 +1,6 @@
 // Package provides simple memory persitence for testing
-// It's not safe for use in production
-package memorydb
+// Not safe for use in production
+package memdb
 
 import (
 	"math"

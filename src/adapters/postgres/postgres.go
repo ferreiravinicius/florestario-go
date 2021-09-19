@@ -1,9 +1,8 @@
-package database
+package postgres
 
 import (
 	"context"
 	"fmt"
-	"pesthub/contracts/store"
 	"pesthub/entities"
 
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -22,7 +21,7 @@ func init() {
 	}
 }
 
-var SavePest store.SaveDisorder = func(pest *entities.Disorder) (int64, error) {
+var Save = func(pest *entities.Disorder) (int64, error) {
 	ctx := context.Background()
 	query := "INSERT INTO praga (name_common) VALUES ($1) RETURNING id"
 	row := db.QueryRow(

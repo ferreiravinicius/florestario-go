@@ -1,16 +1,16 @@
-package memorydb_test
+package memdb_test
 
 import (
-	"pesthub/adapters/memorydb"
-	"pesthub/contracts/store"
+	"pesthub/adapters/memdb"
+	"pesthub/contracts"
 	"pesthub/entities"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func sut() store.DisorderStore {
-	s := memorydb.NewMemoryDisorderStore()
+func sut() contracts.DisorderStore {
+	s := memdb.NewMemoryDisorderStore()
 	return s
 }
 

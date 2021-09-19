@@ -2,11 +2,7 @@ package env
 
 import (
 	"pesthub/contracts"
-	"pesthub/contracts/store"
 )
 
-// Disorder
-var DisorderStore store.DisorderStore
-
-// Message
+var DisorderStore contracts.DisorderStore
 var Messages contracts.Messages
