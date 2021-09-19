@@ -9,4 +9,5 @@ type ExistsDisorderByName func(name string) (bool, error)
 type DisorderStore interface {
 	Save(*entities.Disorder) (*entities.Disorder, error)
 	ExistsName(name string) (bool, error)
+	FindAll() ([]entities.Disorder, error)
 }
