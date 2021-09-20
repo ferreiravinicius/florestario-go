@@ -1,7 +1,7 @@
 package main
 
-import "pesthub/adapters/rest"
+import "pesthub/adapters/restapi"
 
 func main() {
-	rest.NewApi()
+	restapi.NewApi()
 }
