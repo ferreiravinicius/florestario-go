@@ -1,7 +1,5 @@
 package entities
 
-import "pesthub/commons/text"
-
 // type Culture struct {
 // }
 
@@ -28,10 +26,4 @@ type Disorder struct {
 	// CommonCultures []Culture
 	// ControlMethods []ControlMethod
 	// Symptoms       []Symptom
-}
-
-// Generates and fills the slug based on the name
-func (d *Disorder) FillSlug() {
-	slug := text.Slugfy(d.Name)
-	d.Slug = slug
 }
