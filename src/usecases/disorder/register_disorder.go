@@ -3,7 +3,7 @@ package disorder
 import (
 	"pesthub/entities"
 	"pesthub/env"
-	"pesthub/failure"
+	"pesthub/failures"
 	"strconv"
 )
 
@@ -22,17 +22,17 @@ type RegisterDisorderOutput struct {
 func RegisterDisorder(data *RegisterDisorderInput) (*RegisterDisorderOutput, error) {
 	exists, err := env.DisorderStore.ExistsName(data.Name)
 	if err != nil {
-		return nil, failure.Internal(err)
+		return nil, failures.Internal(err)
 	}
 	if exists {
 		message := env.Messages.GetText(MsgNameAlreadyExists)
-		return nil, failure.UseCase(message)
+		return nil, failures.UseCase(message)
 	}
 
 	disorder := data.ToEntity()
 	disorder, err = env.DisorderStore.Save(disorder)
 	if err != nil {
-		return nil, failure.Internal(err)
+		return nil, failures.Internal(err)
 	}
 
 	return &RegisterDisorderOutput{

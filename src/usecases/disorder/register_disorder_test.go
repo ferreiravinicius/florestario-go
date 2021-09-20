@@ -4,7 +4,7 @@ import (
 	"pesthub/adapters/memdb"
 	"pesthub/adapters/testmsgs"
 	"pesthub/env"
-	"pesthub/failure"
+	"pesthub/failures"
 	"pesthub/usecases/disorder"
 	"testing"
 
@@ -36,7 +36,7 @@ func TestRegisterDisorder(t *testing.T) {
 		env.DisorderStore.Save(input.ToEntity()) // save before
 		_, err := disorder.RegisterDisorder(input)
 		assert.Error(t, err)
-		assert.IsType(t, failure.UseCaseError{}, err)
+		assert.IsType(t, failures.UseCaseError{}, err)
 		assert.Equal(t, disorder.MsgNameAlreadyExists, err.Error())
 	})
 }
