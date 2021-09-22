@@ -3,7 +3,6 @@ package disorder_test
 import (
 	"pesthub/adapters/memdb"
 	"pesthub/adapters/testmsgs"
-	"pesthub/env"
 	"pesthub/failures"
 	"pesthub/usecases/disorder"
 	"testing"
@@ -11,11 +10,6 @@ import (
 	"github.com/bxcodec/faker/v3"
 	"github.com/stretchr/testify/assert"
 )
-
-func init() {
-	env.DisorderStore = memdb.NewMemoryDisorderStore()
-	env.Messages = testmsgs.NewTestableMessages()
-}
 
 func makeTestableRegisterDisorderInput() *disorder.RegisterDisorderInput {
 	return &disorder.RegisterDisorderInput{
@@ -25,16 +19,25 @@ func makeTestableRegisterDisorderInput() *disorder.RegisterDisorderInput {
 
 func TestRegisterDisorder(t *testing.T) {
 	t.Run("it should return generated code", func(t *testing.T) {
+		store := memdb.NewMemoryDisorderStore()
+		messages := testmsgs.NewTestableMessages()
+		sut := disorder.NewRegisterDisorder(store, messages)
+
 		input := makeTestableRegisterDisorderInput()
-		output, err := disorder.RegisterDisorder(input)
+		output, err := sut.Execute(input)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, output.Code)
 	})
 
 	t.Run("it should return error when name already exists", func(t *testing.T) {
+		store := memdb.NewMemoryDisorderStore()
+		messages := testmsgs.NewTestableMessages()
+		sut := disorder.NewRegisterDisorder(store, messages)
+
 		input := makeTestableRegisterDisorderInput()
-		env.DisorderStore.Save(input.ToEntity()) // save before
-		_, err := disorder.RegisterDisorder(input)
+		store.Save(input.ToEntity()) // save before
+
+		_, err := sut.Execute(input)
 		assert.Error(t, err)
 		assert.IsType(t, failures.UseCaseError{}, err)
 		assert.Equal(t, disorder.MsgNameAlreadyExists, err.Error())

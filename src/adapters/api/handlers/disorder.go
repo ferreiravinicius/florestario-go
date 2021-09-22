@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"pesthub/adapters/api/apideps"
 	"pesthub/usecases/disorder"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,12 @@ func RegisterDisorder(ctx *gin.Context) error {
 	var data request
 	ctx.BindJSON(&data)
 
-	output, err := disorder.RegisterDisorder(&disorder.RegisterDisorderInput{
+	usecase := disorder.NewRegisterDisorder(
+		apideps.DisorderStore,
+		apideps.Messages,
+	)
+
+	output, err := usecase.Execute(&disorder.RegisterDisorderInput{
 		Name: data.Name,
 	})
 	if err != nil {

@@ -1,0 +1,6 @@
+package apideps
+
+import "pesthub/contracts"
+
+var DisorderStore contracts.DisorderStore
+var Messages contracts.Messages

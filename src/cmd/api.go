@@ -1,7 +1,16 @@
 package main
 
-import "pesthub/adapters/restapi"
+import (
+	"pesthub/adapters/api"
+	"pesthub/adapters/api/apideps"
+	"pesthub/adapters/memdb"
+	"pesthub/adapters/testmsgs"
+)
 
 func main() {
-	restapi.NewApi()
+	apideps.DisorderStore = memdb.NewMemoryDisorderStore()
+	apideps.Messages = testmsgs.NewTestableMessages()
+
+	server := api.NewApi()
+	server.Run()
 }
