@@ -2,7 +2,7 @@ package api
 
 import (
 	"fmt"
-	"pesthub/adapters/api/apideps"
+	"pesthub/adapters/api/config"
 	"pesthub/adapters/api/handlers"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +12,10 @@ type Api struct {
 	router *gin.Engine
 }
 
-func NewApi() *Api {
+func NewApi(env *config.ApiEnv) *Api {
+
+	config.SetEnv(env)
+
 	router := gin.Default()
 	return &Api{
 		router,
@@ -25,15 +28,13 @@ func (api *Api) Run() {
 }
 
 func (api *Api) registerHandlers() {
-	api.router.POST("/disorders", H(handlers.RegisterDisorder))
+	api.router.POST("/disorders", ApiHandler(handlers.RegisterDisorderHandler).Gin())
 	api.router.GET("/disorders", FindAllDisordersHandler)
 }
 
 func FindAllDisordersHandler(c *gin.Context) {
-	all, _ := apideps.DisorderStore.FindAll()
+	env := config.Env()
+	all, _ := env.DisorderStore.FindAll()
 	fmt.Println(all)
 	c.JSON(200, all)
 }
-
-// router.POST("/disorders", H(handlers.RegisterDisorder))
-// router.GET("/disorders", FindAllDisordersHandler)

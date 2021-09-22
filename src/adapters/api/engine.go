@@ -9,10 +9,9 @@ import (
 )
 
 // Our handler func to better error handling
-type OurHandlerFunc func(ctx *gin.Context) error
+type ApiHandler func(ctx *gin.Context) error
 
-// Adapts OurHandlerFunc to gin.HandlerFunc
-func H(handler OurHandlerFunc) gin.HandlerFunc {
+func (handler ApiHandler) Gin() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if err := handler(ctx); err != nil {
 			HandleError(ctx, err)

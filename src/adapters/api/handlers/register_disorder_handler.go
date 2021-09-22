@@ -1,28 +1,29 @@
 package handlers
 
 import (
-	"pesthub/adapters/api/apideps"
+	"pesthub/adapters/api/config"
 	"pesthub/usecases/disorder"
 
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterDisorder(ctx *gin.Context) error {
+type request struct {
+	Name string `json:"name"`
+}
 
-	type request struct {
-		Name string `json:"name"`
-	}
+type response struct {
+	Code string `json:"code"`
+}
 
-	type response struct {
-		Code string `json:"code"`
-	}
+func RegisterDisorderHandler(ctx *gin.Context) error {
 
 	var data request
 	ctx.BindJSON(&data)
 
+	env := config.Env()
 	usecase := disorder.NewRegisterDisorder(
-		apideps.DisorderStore,
-		apideps.Messages,
+		env.DisorderStore,
+		env.Messages,
 	)
 
 	output, err := usecase.Execute(&disorder.RegisterDisorderInput{
