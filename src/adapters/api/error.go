@@ -1,4 +1,4 @@
-package fiberapi
+package api
 
 import (
 	"log"

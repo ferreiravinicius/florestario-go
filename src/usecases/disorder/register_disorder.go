@@ -12,11 +12,11 @@ const (
 )
 
 type RegisterDisorderInput struct {
-	Name string
+	Name string `json:"name"`
 }
 
 type RegisterDisorderOutput struct {
-	Code string
+	Code string `json:"code"`
 }
 
 type RegisterDisorderUseCase interface {

@@ -1,40 +1,28 @@
 package handlers
 
 import (
-	"pesthub/adapters/api/config"
+	"net/http"
+	"pesthub/adapters/api/env"
 	"pesthub/usecases/disorder"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
-type request struct {
-	Name string `json:"name"`
-}
+func RegisterDisorderHandler(ctx *fiber.Ctx) error {
+	var data disorder.RegisterDisorderInput
+	if err := ctx.BodyParser(&data); err != nil {
+		return err
+	}
 
-type response struct {
-	Code string `json:"code"`
-}
-
-func RegisterDisorderHandler(ctx *gin.Context) error {
-
-	var data request
-	ctx.BindJSON(&data)
-
-	env := config.Env()
 	usecase := disorder.NewRegisterDisorder(
-		env.DisorderStore,
-		env.Messages,
+		env.Deps.DisorderStore,
+		env.Deps.Messages,
 	)
 
-	output, err := usecase.Execute(&disorder.RegisterDisorderInput{
-		Name: data.Name,
-	})
+	output, err := usecase.Execute(&data)
 	if err != nil {
 		return err
 	}
 
-	resp := &response{Code: output.Code}
-	ctx.JSON(201, resp)
-
-	return nil
+	return ctx.Status(http.StatusCreated).JSON(&output)
 }
