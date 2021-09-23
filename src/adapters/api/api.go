@@ -28,8 +28,22 @@ func (api *Api) Run() {
 }
 
 func (api *Api) registerHandlers() {
-	api.router.POST("/disorders", ApiHandler(handlers.RegisterDisorderHandler).Gin())
+	api.router.POST("/disorders", ApiHandler(handlers.RegisterDisorderHandler).GinHandler())
 	api.router.GET("/disorders", FindAllDisordersHandler)
+}
+
+type ApiErrorHandler interface {
+	Handle(e error)
+}
+
+func (api *Api) GinHandler(apiHandler ApiHandler, errorHandler ApiErrorHandler) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if err := apiHandler(ctx); err != nil {
+			// request := ctx.Request
+			// responseWriter := ctx.Writer
+			// errorHandler.Handle(request, responseWriter, err)
+		}
+	}
 }
 
 func FindAllDisordersHandler(c *gin.Context) {

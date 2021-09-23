@@ -1,21 +1,17 @@
 package main
 
-import (
-	"pesthub/adapters/api"
-	"pesthub/adapters/api/config"
-	"pesthub/adapters/memdb"
-	"pesthub/adapters/testmsgs"
-)
+import "pesthub/adapters/fiberapi"
 
 func main() {
 
-	store := memdb.NewMemoryDisorderStore()
-	messages := testmsgs.NewTestableMessages()
+	app := fiberapi.NewApi()
+	app.Listen(":8080")
 
-	server := api.NewApi(&config.ApiEnv{
-		DisorderStore: store,
-		Messages:      messages,
-	})
+	// store := memdb.NewMemoryDisorderStore()
+	// messages := testmsgs.NewTestableMessages()
 
-	server.Run()
+	// server := api.NewApi(&config.ApiEnv{
+	// 	DisorderStore: store,
+	// 	Messages:      messages,
+	// })
 }
