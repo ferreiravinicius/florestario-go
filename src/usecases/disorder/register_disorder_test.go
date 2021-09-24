@@ -5,6 +5,7 @@ import (
 	"pesthub/adapters/testmsgs"
 	"pesthub/failures"
 	"pesthub/usecases/disorder"
+	"strconv"
 	"testing"
 
 	"github.com/bxcodec/faker/v3"
@@ -44,14 +45,23 @@ func TestRegisterDisorder(t *testing.T) {
 	})
 }
 
-var outscope *disorder.RegisterDisorderOutput
+// benchmark
+var names100k []string
+
+func init() {
+	// prepare names for benchmarking
+	names100k = make([]string, 100_000)
+	for i := 0; i < 100_000; i++ {
+		names100k[i] = "randomname" + strconv.Itoa(i)
+	}
+}
 
 func BenchmarkRegisterDisorder(b *testing.B) {
-	var r *disorder.RegisterDisorderOutput
 	sut := disorder.NewRegisterDisorder(memdb.NewMemoryDisorderStore(), testmsgs.NewTestableMessages())
 	for i := 0; i < b.N; i++ {
-		input := makeTestableRegisterDisorderInput()
-		r, _ = sut.Execute(input)
+		input := disorder.RegisterDisorderInput{
+			Name: names100k[i],
+		}
+		sut.Execute(&input)
 	}
-	outscope = r
 }
