@@ -65,3 +65,14 @@ func BenchmarkRegisterDisorder(b *testing.B) {
 		sut.Execute(&input)
 	}
 }
+
+func BenchmarkRegisterOptimal(b *testing.B) {
+	disorder.OptMsgs = testmsgs.NewTestableMessages()
+	disorder.OptStore = memdb.NewMemoryDisorderStore()
+	for i := 0; i < b.N; i++ {
+		input := disorder.RegisterDisorderInput{
+			Name: names100k[i],
+		}
+		disorder.RegisterOptimal(input)
+	}
+}
