@@ -19,9 +19,9 @@ func TestSave(t *testing.T) {
 	t.Run("it should generate unique code", func(t *testing.T) {
 		sut := sut()
 		disorder := entities.Disorder{}
-		saved, err := sut.Save(&disorder)
+		err := sut.Save(&disorder)
 		assert.NoError(t, err)
-		assert.Greater(t, saved.Code, uint64(0))
+		assert.Greater(t, disorder.Id, uint64(0))
 	})
 
 }
@@ -54,8 +54,8 @@ func TestDirectAccessShouldNotBeAllowed(t *testing.T) {
 	sut := sut()
 	d1 := &entities.Disorder{Name: "name"}
 	d2 := &entities.Disorder{Name: "name"}
-	saved1, _ := sut.Save(d1)
-	saved2, _ := sut.Save(d2)
+	sut.Save(d1)
+	sut.Save(d2)
 
 	// find all then change all
 	all1, _ := sut.FindAll()
@@ -69,8 +69,6 @@ func TestDirectAccessShouldNotBeAllowed(t *testing.T) {
 	}
 
 	// change original and saved
-	saved1.Name = "oops"
-	saved2.Name = "oops"
 	d1.Name = "oops"
 	d2.Name = "oops"
 

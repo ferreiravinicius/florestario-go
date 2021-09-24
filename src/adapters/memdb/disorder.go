@@ -5,6 +5,7 @@ package memdb
 import (
 	"math"
 	"math/rand"
+	"pesthub/contracts"
 	"pesthub/entities"
 )
 
@@ -12,16 +13,16 @@ type memoryDisorderStore struct {
 	disorders []entities.Disorder
 }
 
-func NewMemoryDisorderStore() *memoryDisorderStore {
+func NewMemoryDisorderStore() contracts.DisorderStore {
 	return &memoryDisorderStore{
 		disorders: make([]entities.Disorder, 0, 10),
 	}
 }
 
-func (s *memoryDisorderStore) Save(disorder *entities.Disorder) (*entities.Disorder, error) {
-	disorder.Code = randomize()
+func (s *memoryDisorderStore) Save(disorder *entities.Disorder) error {
+	disorder.Id = randomize()
 	s.disorders = append(s.disorders, *disorder)
-	return disorder, nil
+	return nil
 }
 
 func (s *memoryDisorderStore) ExistsName(name string) (bool, error) {

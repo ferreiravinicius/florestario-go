@@ -14,7 +14,7 @@ package entities
 
 type Disorder struct {
 	// // Unique
-	Code uint64
+	Id   uint64
 	Name string
 
 	// BinomialName string //maybe list ?

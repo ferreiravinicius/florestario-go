@@ -10,5 +10,5 @@ func (TestableMessages) GetText(code string, _ ...map[string]string) string {
 }
 
 func NewTestableMessages() contracts.Messages {
-	return &TestableMessages{}
+	return TestableMessages{}
 }
