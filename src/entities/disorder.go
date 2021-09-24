@@ -1,29 +1,26 @@
 package entities
 
-// type Culture struct {
-// }
+const (
+	CauserAnimal = "animal"
+	CauserFungus = "fungus"
+	CauserInsect = "insect"
+)
 
-// type Symptom struct {
-// }
-
-// type ControlMethod struct {
-// }
-
-// type Damage struct {
-// }
+const (
+	ConsequenceDamage  = "damage"
+	ConsequenceDisease = "disease"
+)
 
 type Disorder struct {
-	// // Unique
-	Id   uint64
-	Name string
-
-	// BinomialName string //maybe list ?
-	Slug   string
-	Kind   string //desease, pest
-	Causer string //insect, fungae
-	// Description    string
-	// // Damages        []Damage ignore for now
-	// CommonCultures []Culture
-	// ControlMethods []ControlMethod
-	// Symptoms       []Symptom
+	Id           uint64
+	Name         string
+	Causer       string
+	Description  string
+	Consequences []string
 }
+
+// BinomialName [?]string
+// Slug   string
+// CommonCultures []Culture
+// ControlMethods []ControlMethod
+// Symptoms       []Symptom
