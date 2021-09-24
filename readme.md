@@ -1,0 +1,1 @@
+`go build -gcflags '-m -l' path/to/file.go` points memory leaks 
