@@ -16,7 +16,7 @@ type RegisterDisorderInput struct {
 }
 
 type RegisterDisorderOutput struct {
-	Code string `json:"code"`
+	Id string `json:"id"`
 }
 
 type RegisterDisorderUseCase interface {
@@ -45,14 +45,13 @@ func (usecase *RegisterDisorder) Execute(disorderInput *RegisterDisorderInput) (
 		return nil, failures.UseCase(message)
 	}
 
-	disorder := disorderInput.ToEntity()
-	disorder, err = usecase.store.Save(disorder)
-	if err != nil {
+	entity := disorderInput.ToEntity()
+	if err = usecase.store.Save(entity); err != nil {
 		return nil, failures.Internal(err)
 	}
 
 	return &RegisterDisorderOutput{
-		Code: strconv.FormatUint(disorder.Code, 10),
+		Id: strconv.FormatUint(entity.Id, 10),
 	}, nil
 }
 

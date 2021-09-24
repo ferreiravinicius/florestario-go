@@ -19,7 +19,7 @@ func makeTestableRegisterDisorderInput() *disorder.RegisterDisorderInput {
 }
 
 func TestRegisterDisorder(t *testing.T) {
-	t.Run("it should return generated code", func(t *testing.T) {
+	t.Run("it should return generated id", func(t *testing.T) {
 		store := memdb.NewMemoryDisorderStore()
 		messages := testmsgs.NewTestableMessages()
 		sut := disorder.NewRegisterDisorder(store, messages)
@@ -27,7 +27,7 @@ func TestRegisterDisorder(t *testing.T) {
 		input := makeTestableRegisterDisorderInput()
 		output, err := sut.Execute(input)
 		assert.NoError(t, err)
-		assert.NotEmpty(t, output.Code)
+		assert.NotEmpty(t, output.Id)
 	})
 
 	t.Run("it should return error when name already exists", func(t *testing.T) {
@@ -36,7 +36,8 @@ func TestRegisterDisorder(t *testing.T) {
 		sut := disorder.NewRegisterDisorder(store, messages)
 
 		input := makeTestableRegisterDisorderInput()
-		store.Save(input.ToEntity()) // save before
+		entity := input.ToEntity()
+		store.Save(entity)
 
 		_, err := sut.Execute(input)
 		assert.Error(t, err)
