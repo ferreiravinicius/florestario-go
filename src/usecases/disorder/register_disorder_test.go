@@ -43,3 +43,15 @@ func TestRegisterDisorder(t *testing.T) {
 		assert.Equal(t, disorder.MsgNameAlreadyExists, err.Error())
 	})
 }
+
+var outscope *disorder.RegisterDisorderOutput
+
+func BenchmarkRegisterDisorder(b *testing.B) {
+	var r *disorder.RegisterDisorderOutput
+	sut := disorder.NewRegisterDisorder(memdb.NewMemoryDisorderStore(), testmsgs.NewTestableMessages())
+	for i := 0; i < b.N; i++ {
+		input := makeTestableRegisterDisorderInput()
+		r, _ = sut.Execute(input)
+	}
+	outscope = r
+}
