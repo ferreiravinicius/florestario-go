@@ -15,7 +15,6 @@ var (
 
 type ErrorResponse struct {
 	Message   string `json:"message"`
-	Cause     string `json:"cause,omitempty"`
 	FieldName string `json:"field_name,omitempty"`
 }
 
