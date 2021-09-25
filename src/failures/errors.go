@@ -1,5 +1,7 @@
 package failures
 
+import "strings"
+
 type InternalError struct {
 	Cause error
 }
@@ -24,4 +26,15 @@ func UseCase(message string) UseCaseError {
 	return UseCaseError{
 		Message: message,
 	}
+}
+
+type ErrorList []error
+
+func (el ErrorList) Error() string {
+	var sb strings.Builder
+	for _, err := range el {
+		sb.WriteString(err.Error())
+		sb.WriteRune('\n')
+	}
+	return sb.String()
 }

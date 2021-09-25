@@ -36,3 +36,15 @@ func TestInternalError(t *testing.T) {
 	assert.Equal(t, fakeErr.Error(), e2.Cause.Error())
 	assert.NotEmpty(t, e2.Error())
 }
+
+func TestErrorList(t *testing.T) {
+	e1 := errors.New("error.one")
+	e2 := errors.New("error.two")
+	list := failures.ErrorList{e1, e2}
+
+	assert.Error(t, list)
+	assert.Contains(t, list, e1)
+	assert.Contains(t, list, e2)
+	assert.Contains(t, list.Error(), e1.Error())
+	assert.Contains(t, list.Error(), e2.Error())
+}
