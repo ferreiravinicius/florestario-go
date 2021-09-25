@@ -9,33 +9,36 @@ import (
 )
 
 var (
-	MsgFriendlyInternalError   = env.MessageProvider.Get("friendly.internal.error")
-	MsgFriendlyUnexpectedError = env.MessageProvider.Get("friendly.unexpected.error")
+	MsgFriendlyInternalError   = "friendly.internal.error"
+	MsgFriendlyUnexpectedError = "friendly.unexpected.error"
 )
 
 type ErrorResponse struct {
 	Message   string `json:"message"`
+	Cause     error  `json:"cause,omitempty"`
 	FieldName string `json:"field_name,omitempty"`
 }
 
-// TODO: log
+// TODO: add log, remove cause and manage messages properly
 func ErrorHandler(ctx *fiber.Ctx, err error) error {
 
-	status := http.StatusInternalServerError
+	code := http.StatusInternalServerError
 	var response ErrorResponse
 
 	switch err := err.(type) {
 	case failures.UseCaseError:
 		response = ErrorResponse{Message: err.Message}
-		status = http.StatusUnprocessableEntity
-	case failures.InternalError:
-		response = ErrorResponse{Message: MsgFriendlyInternalError}
+		code = http.StatusUnprocessableEntity
 	case failures.ValidationError:
 		response = ErrorResponse{Message: err.Message, FieldName: err.Field}
-		status = http.StatusUnprocessableEntity
+		code = http.StatusUnprocessableEntity
+	case failures.InternalError:
+		msg := env.MessageProvider.Get(MsgFriendlyInternalError)
+		response = ErrorResponse{Message: msg}
 	default:
-		response = ErrorResponse{Message: MsgFriendlyUnexpectedError}
+		msg := env.MessageProvider.Get(MsgFriendlyUnexpectedError)
+		response = ErrorResponse{Message: msg, Cause: err}
 	}
 
-	return ctx.Status(status).JSON(&response)
+	return ctx.Status(code).JSON(&response)
 }
