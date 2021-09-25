@@ -6,7 +6,6 @@ import (
 	"pesthub/env"
 	"pesthub/failures"
 	"pesthub/usecases/disorder"
-	"strconv"
 	"testing"
 
 	"github.com/bxcodec/faker/v3"
@@ -48,27 +47,4 @@ func TestRegisterDisorder(t *testing.T) {
 		assert.IsType(t, failures.UseCaseError{}, err)
 		assert.Equal(t, disorder.MsgNameAlreadyExists, err.Error())
 	})
-}
-
-// benchmark
-var names100k []string
-
-func init() {
-	// prepare names for benchmarking
-	names100k = make([]string, 100_000)
-	for i := 0; i < 100_000; i++ {
-		names100k[i] = "randomname" + strconv.Itoa(i)
-	}
-
-	// prepare env
-	configureEnv()
-}
-
-func BenchmarkRegisterDisorder(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		input := disorder.RegisterDisorderInput{
-			Name: names100k[i],
-		}
-		disorder.RegisterDisorder(&input)
-	}
 }
