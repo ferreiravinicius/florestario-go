@@ -1,5 +1,7 @@
 package contracts
 
+type ArgMap map[string]string
+
 type Messages interface {
-	GetText(code string, args ...map[string]string) string
+	GetText(code string, args ...ArgMap) string
 }

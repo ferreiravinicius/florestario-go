@@ -5,7 +5,7 @@ import "pesthub/contracts"
 type TestableMessages struct {
 }
 
-func (TestableMessages) GetText(code string, _ ...map[string]string) string {
+func (TestableMessages) GetText(code string, _ ...contracts.ArgMap) string {
 	return code
 }
 
