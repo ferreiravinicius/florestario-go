@@ -1,27 +1,42 @@
 package api
 
 import (
-	"log"
 	"net/http"
+	"pesthub/env"
 	"pesthub/failures"
 
 	"github.com/gofiber/fiber/v2"
 )
 
+var (
+	MsgFriendlyInternalError   = env.MessageProvider.Get("friendly.internal.error")
+	MsgFriendlyUnexpectedError = env.MessageProvider.Get("friendly.unexpected.error")
+)
+
 type ErrorResponse struct {
-	Message string `json:"message"`
-	Cause   string `json:"cause,omitempty"`
+	Message   string `json:"message"`
+	Cause     string `json:"cause,omitempty"`
+	FieldName string `json:"field_name,omitempty"`
 }
 
+// TODO: log
 func ErrorHandler(ctx *fiber.Ctx, err error) error {
+
+	status := http.StatusInternalServerError
+	var response ErrorResponse
+
 	switch err := err.(type) {
 	case failures.UseCaseError:
-		return ctx.Status(http.StatusUnprocessableEntity).JSON(ErrorResponse{Message: err.Message})
+		response = ErrorResponse{Message: err.Message}
+		status = http.StatusUnprocessableEntity
 	case failures.InternalError:
-		log.Println("Internal error: ", err)
-		return ctx.Status(http.StatusInternalServerError).JSON(ErrorResponse{Message: "Oops! Internal error!"})
+		response = ErrorResponse{Message: MsgFriendlyInternalError}
+	case failures.ValidationError:
+		response = ErrorResponse{Message: err.Message, FieldName: err.Field}
+		status = http.StatusUnprocessableEntity
 	default:
-		log.Println("Undefined error: ", err)
-		return ctx.Status(http.StatusInternalServerError).JSON(ErrorResponse{Message: "Oops! Something went wrong!"})
+		response = ErrorResponse{Message: MsgFriendlyUnexpectedError}
 	}
+
+	return ctx.Status(status).JSON(&response)
 }
