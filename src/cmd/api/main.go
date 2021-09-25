@@ -10,8 +10,8 @@ import (
 func main() {
 
 	deps := &env.ApiDependencies{
-		DisorderStore: memdb.NewMemoryDisorderStore(),
-		Messages:      testmsgs.NewTestableMessages(),
+		DisorderStore:   memdb.NewMemoryDisorderStore(),
+		MessageProvider: testmsgs.NewTestableMessageProvider(),
 	}
 	app := api.NewApi(deps)
 	app.Listen(":8080")

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"pesthub/adapters/api/env"
 	"pesthub/usecases/disorder"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,12 +13,7 @@ func RegisterDisorderHandler(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	usecase := disorder.NewRegisterDisorder(
-		env.Deps.DisorderStore,
-		env.Deps.Messages,
-	)
-
-	output, err := usecase.Execute(&data)
+	output, err := disorder.RegisterDisorder(&data)
 	if err != nil {
 		return err
 	}

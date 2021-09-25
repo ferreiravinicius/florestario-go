@@ -1,8 +1,8 @@
 package disorder
 
 import (
-	"pesthub/contracts"
 	"pesthub/entities"
+	"pesthub/env"
 	"pesthub/failures"
 	"strconv"
 )
@@ -19,34 +19,20 @@ type RegisterDisorderOutput struct {
 	Id string `json:"id"`
 }
 
-type RegisterDisorderUseCase interface {
-	Execute(input *RegisterDisorderInput) (*RegisterDisorderOutput, error)
-}
+type RegisterDisorderUseCase func(input *RegisterDisorderInput) (*RegisterDisorderOutput, error)
 
-type RegisterDisorder struct {
-	store    contracts.DisorderStore
-	messages contracts.Messages
-}
-
-func NewRegisterDisorder(store contracts.DisorderStore, messages contracts.Messages) RegisterDisorderUseCase {
-	return &RegisterDisorder{
-		store,
-		messages,
-	}
-}
-
-func (usecase *RegisterDisorder) Execute(disorderInput *RegisterDisorderInput) (*RegisterDisorderOutput, error) {
-	exists, err := usecase.store.ExistsName(disorderInput.Name)
+func RegisterDisorder(disorderInput *RegisterDisorderInput) (*RegisterDisorderOutput, error) {
+	exists, err := env.DisorderStore.ExistsName(disorderInput.Name)
 	if err != nil {
 		return nil, failures.Internal(err)
 	}
 	if exists {
-		message := usecase.messages.GetText(MsgNameAlreadyExists)
+		message := env.MessageProvider.Get(MsgNameAlreadyExists)
 		return nil, failures.UseCase(message)
 	}
 
 	entity := disorderInput.ToEntity()
-	if err = usecase.store.Save(entity); err != nil {
+	if err = env.DisorderStore.Save(entity); err != nil {
 		return nil, failures.Internal(err)
 	}
 

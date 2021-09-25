@@ -9,10 +9,10 @@ import (
 )
 
 func TestGetText(t *testing.T) {
-	provider := testmsgs.NewTestableMessages()
-	msg := provider.GetText("message.mock")
+	provider := testmsgs.NewTestableMessageProvider()
+	msg := provider.Get("message.mock")
 	assert.Equal(t, "message.mock", msg)
 
-	_ = provider.GetText("text", contracts.ArgMap{"arg": "value"})
+	_ = provider.Get("text", contracts.ArgMap{"arg": "value"})
 
 }
