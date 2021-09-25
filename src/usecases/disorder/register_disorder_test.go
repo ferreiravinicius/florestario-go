@@ -12,13 +12,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func makeTestableRegisterDisorderInput() *disorder.RegisterDisorderInput {
+func createTestableInput() *disorder.RegisterDisorderInput {
 	return &disorder.RegisterDisorderInput{
 		Name: faker.Name(),
 	}
 }
 
-func configureEnv() {
+func resetEnv() {
 	env.DisorderStore = memdb.NewMemoryDisorderStore()
 	env.MessageProvider = testmsgs.NewTestableMessageProvider()
 }
@@ -29,16 +29,16 @@ func TestRegisterDisorder(t *testing.T) {
 	})
 
 	t.Run("it should return generated id", func(t *testing.T) {
-		configureEnv()
-		input := makeTestableRegisterDisorderInput()
+		resetEnv()
+		input := createTestableInput()
 		output, err := disorder.RegisterDisorder(input)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, output.Id)
 	})
 
 	t.Run("it should return error when name already exists", func(t *testing.T) {
-		configureEnv()
-		input := makeTestableRegisterDisorderInput()
+		resetEnv()
+		input := createTestableInput()
 		entity := input.ToEntity()
 		env.DisorderStore.Save(entity)
 
@@ -47,4 +47,15 @@ func TestRegisterDisorder(t *testing.T) {
 		assert.IsType(t, failures.UseCaseError{}, err)
 		assert.Equal(t, disorder.MsgNameAlreadyExists, err.Error())
 	})
+
+	t.Run("it should validate name", func(t *testing.T) {
+		input := createTestableInput()
+		input.Name = "" // invalid name
+
+		_, err := disorder.RegisterDisorder(input)
+		assert.Error(t, err)
+		assert.IsType(t, failures.ValidationError{}, err)
+
+	})
+
 }

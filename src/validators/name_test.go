@@ -3,6 +3,7 @@ package validators_test
 import (
 	"pesthub/adapters/testmsgs"
 	"pesthub/env"
+	"pesthub/failures"
 	"pesthub/validators"
 	"testing"
 
@@ -21,6 +22,7 @@ func TestName(t *testing.T) {
 		assert.NotNil(t, err)
 		wanted := env.MessageProvider.Get(validators.MsgNameMinimumSize)
 		assert.Equal(t, wanted, err.Error())
+		assert.IsType(t, failures.ValidationError{}, err)
 	})
 
 	t.Run("should pass when provided valid name", func(t *testing.T) {

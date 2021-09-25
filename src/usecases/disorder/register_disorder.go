@@ -4,6 +4,7 @@ import (
 	"pesthub/entities"
 	"pesthub/env"
 	"pesthub/failures"
+	"pesthub/validators"
 	"strconv"
 )
 
@@ -22,6 +23,11 @@ type RegisterDisorderOutput struct {
 type RegisterDisorderUseCase func(input *RegisterDisorderInput) (*RegisterDisorderOutput, error)
 
 func RegisterDisorder(disorderInput *RegisterDisorderInput) (*RegisterDisorderOutput, error) {
+
+	if err := validators.Name(disorderInput.Name); err != nil {
+		return nil, err
+	}
+
 	exists, err := env.DisorderStore.ExistsName(disorderInput.Name)
 	if err != nil {
 		return nil, failures.Internal(err)
