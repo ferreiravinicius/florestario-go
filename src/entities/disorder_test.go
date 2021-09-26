@@ -9,18 +9,18 @@ import (
 
 func TestDisorder(t *testing.T) {
 
-	assert.Equal(t, entities.CauserAnimal, "animal")
-	assert.Equal(t, entities.CauserFungus, "fungus")
-	assert.Equal(t, entities.CauserInsect, "insect")
+	fungus := entities.CauserFungus
+	assert.True(t, fungus.Name == "fungus" && fungus.Code == 0)
 
-	assert.Equal(t, entities.ConsequenceDamage, "damage")
-	assert.Equal(t, entities.ConsequenceDisease, "disease")
+	animal := entities.CauserAnimal
+	assert.True(t, animal.Name == "animal" && animal.Code == 1)
+
+	insect := entities.CauserInsect
+	assert.True(t, insect.Name == "insect" && insect.Code == 2)
 
 	_ = entities.Disorder{
-		Id:           uint64(1),
-		Name:         "name",
-		Description:  "description",
-		Causer:       "causer",
-		Consequences: []string{"cause.one"},
+		Id:          uint64(1),
+		Name:        "name",
+		Description: "description",
 	}
 }
